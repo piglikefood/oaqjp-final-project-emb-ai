@@ -8,7 +8,12 @@ def index():
     if "textToAnalyze" in request.args:
         textToAnalyze = request.args["textToAnalyze"]
         response = emotion_detector(textToAnalyze)
-        return render_template("index.html", resp = response, text = textToAnalyze)
+
+        if response["dominant_emotion"] == "None":
+            message = "Invalid text! Please try again!"
+        else:
+            message = "For the given statement, the system response is 'anger':"+response.anger+" 'disgust' : "+response.disgust+" 'fear' : "+response.fear+" 'joy' : "+response.joy+" 'sadness' : "+response.sadness+". The dominant emotion is "+response.dominant_emotion+"."
+
+        return render_template("index.html", message = message, text = textToAnalyze)
     else:
-        response = {'anger': 0, 'disgust': 0, 'fear':0, 'joy':0, 'sadness':0, 'dominant_emotion': 'None'}
-        return render_template("index.html", resp = response, text = "")
+        return render_template("index.html", message = "", text = "")
